@@ -319,7 +319,7 @@
             solveFor: 'Solve for',
             isoscelesLabel: 'Isosceles Trapezium',
             rightLabel: 'Right-Angled Trapezium',
-            regenText: '🔄 Generate New Exercises',
+            regenText: '🔄 הגרל תרגילים חדשים',
             unitSystemText: 'System Scaling Measurement Unit:'
         },
         ar: {
@@ -346,7 +346,7 @@
             solveFor: 'أوجِد قيمة',
             isoscelesLabel: 'شبه منحرف متساوي الساقين',
             rightLabel: 'شبه منحرف قائم الزاوية',
-            regenText: '🔄 توليد تمارين جديدة',
+            regenText: '🔄 הגרל תרגילים חדשים',
             unitSystemText: 'وحدة القياس المعتمدة للمسافات والمحيط:'
         },
         he: {
@@ -400,7 +400,7 @@
             solveFor: 'Найдите значение',
             isoscelesLabel: 'Равнобедренная трапеция',
             rightLabel: 'Прямоугольная трапеция',
-            regenText: '🔄 Сгенерировать новые задачи',
+            regenText: '🔄 הגרל תרגילים חדשים',
             unitSystemText: 'Единица измерения длин на рисунке:'
         }
     };
@@ -441,7 +441,7 @@
         ];
 
         dataset = baseTemplates.map(template => {
-            const randFactor = Math.floor(Math.random() * 3) + 2; 
+            const randFactor = Math.floor(Math.random() * 4) + 2; 
             let a = 4 * randFactor;
             let b = 10 * randFactor;
             let h = 4 * randFactor;
@@ -583,6 +583,7 @@
                 
                 <text x="${(x1+x2)/2}" y="${yTop - 12}" font-size="14" font-weight="bold" fill="${colorA}" text-anchor="middle">a = ${displayA}</text>
                 <text x="${(x3+x4)/2}" y="${yBottom + 22}" font-size="14" font-weight="bold" fill="${colorB}" text-anchor="middle">b = ${displayB}</text>
+                
                 <text x="${x4 - 18}" y="${(yTop+yBottom)/2}" font-size="14" font-weight="bold" fill="${colorC}" text-anchor="end">c = ${displayC}</text>
                 <text x="${x3 + 18}" y="${(yTop+yBottom)/2}" font-size="14" font-weight="bold" fill="#475569" text-anchor="start">d = ${displayD}</text>
                 
@@ -613,36 +614,37 @@
         const container = document.getElementById('interactive-svg-placement');
         container.innerHTML = generateSVG(a, b, h, h, h, 'Isosceles', '');
 
+        // FIXED: Extracted Hebrew unit strings completely outside of LaTeX tags so browser HTML renders them cleanly without clipping
         if (currentLang === 'he') {
             document.getElementById('split-math-output').innerHTML = `
                 <ul>
-                    <li><b>שטח המלבן המרכזי:</b> $$a \\times h = ${a} \\times ${h} = ${rectArea} \\text{ סמ״ר}$$</li>
-                    <li><b>שטח המשולשים יחד:</b> $$\\frac{(${b - a} \\times ${h})}{2} = ${trianglesArea} \\text{ סמ״ר}$$</li>
-                    <li><b>שטח הטרפז הכולל:</b> $$${rectArea} + ${trianglesArea} = ${totalArea} \\text{ סמ״ר}$$</li>
+                    <li><b>שטח המלבן המרכזי:</b> $$a \\times h = ${a} \\times ${h} = ${rectArea}$$ <span>סמ״ר</span></li>
+                    <li><b>שטח המשولשים יחד:</b> $$\\frac{(${b - a} \\times ${h})}{2} = ${trianglesArea}$$ <span>סמ״ר</span></li>
+                    <li><b>שטח הטרפז הכולל:</b> $$${rectArea} + ${trianglesArea} = ${totalArea}$$ <span>סמ״ר</span></li>
                 </ul>
             `;
         } else if (currentLang === 'ar') {
             document.getElementById('split-math-output').innerHTML = `
                 <ul>
-                    <li><b>مساحة المستطيل:</b> $$a \\times h = ${a} \\times ${h} = ${rectArea} \\text{ سم}^2$$</li>
-                    <li><b>مساحة المثلثات:</b> $$\\frac{(${b - a} \\times ${h})}{2} = ${trianglesArea} \\text{ سم}^2$$</li>
-                    <li><b>المساحة الكلية:</b> $$${rectArea} + ${trianglesArea} = ${totalArea} \\text{ سم}^2$$</li>
+                    <li><b>مساحة المستطيل:</b> $$a \\times h = ${a} \\times ${h} = ${rectArea}$$ <span>سم²</span></li>
+                    <li><b>مساحة المثلثات:</b> $$\\frac{(${b - a} \\times ${h})}{2} = ${trianglesArea}$$ <span>سم²</span></li>
+                    <li><b>المساحة الكلية:</b> $$${rectArea} + ${trianglesArea} = ${totalArea}$$ <span>سم²</span></li>
                 </ul>
             `;
         } else if (currentLang === 'ru') {
             document.getElementById('split-math-output').innerHTML = `
                 <ul>
-                    <li><b>Площадь прямоугольника:</b> $$a \\times h = ${a} \\times ${h} = ${rectArea} \\text{ см}^2$$</li>
-                    <li><b>Площадь треугольников:</b> $$\\frac{(${b - a} \\times ${h})}{2} = ${trianglesArea} \\text{ см}^2$$</li>
-                    <li><b>Общая площадь:</b> $$${rectArea} + ${trianglesArea} = ${totalArea} \\text{ см}^2$$</li>
+                    <li><b>Площадь прямоугольника:</b> $$a \\times h = ${a} \\times ${h} = ${rectArea}$$ <span>см²</span></li>
+                    <li><b>Площадь треугольников:</b> $$\\frac{(${b - a} \\times ${h})}{2} = ${trianglesArea}$$ <span>см²</span></li>
+                    <li><b>Общая площадь:</b> $$${rectArea} + ${trianglesArea} = ${totalArea}$$ <span>см²</span></li>
                 </ul>
             `;
         } else {
             document.getElementById('split-math-output').innerHTML = `
                 <ul>
-                    <li><b>Center Rectangle Area:</b> $$a \\times h = ${a} \\times ${h} = ${rectArea} \\text{ cm}^2$$</li>
-                    <li><b>Combined Triangles Area:</b> $$\\frac{(${b - a} \\times ${h})}{2} = ${trianglesArea} \\text{ cm}^2$$</li>
-                    <li><b>Total Combined Area:</b> $$${rectArea} + ${trianglesArea} = ${totalArea} \\text{ cm}^2$$</li>
+                    <li><b>Center Rectangle Area:</b> $$a \\times h = ${a} \\times ${h} = ${rectArea}$$ <span>cm²</span></li>
+                    <li><b>Combined Triangles Area:</b> $$\\frac{(${b - a} \\times ${h})}{2} = ${trianglesArea}$$ <span>cm²</span></li>
+                    <li><b>Total Combined Area:</b> $$${rectArea} + ${trianglesArea} = ${totalArea}$$ <span>cm²</span></li>
                 </ul>
             `;
         }
@@ -681,7 +683,7 @@
                             <div><label>b: </label><input type="number" id="split-b" value="14" oninput="updateLiveSplitCalculations()"></div>
                             <div><label>h: </label><input type="number" id="split-h" value="4" oninput="updateLiveSplitCalculations()"></div>
                         </div>
-                        <div class="unit-aside-note">${t.unitSystemText} <b>cm / ס״מ</b></div>
+                        <div class="unit-aside-note">${t.unitSystemText} <b>ס״מ / cm</b></div>
                         <div id="split-math-output"></div>
                     </div>
                 </div>
@@ -727,7 +729,6 @@
 
             const mathTargetSymbol = data.labelX === 'x' ? '$$x$$' : `$$\\text{${data.labelX}}$$`;
 
-            // Detect what token label is modified as 'x' to highlight the visual view correctly
             let activeUrlLabel = data.labelX;
             if(data.isInverseA) activeUrlLabel = 'a';
             if(data.isInverseB) activeUrlLabel = 'b';
@@ -805,7 +806,7 @@
             `;
         } else if (data.isInverseC) {
             stepHtml = `
-                $$\\text{בטרפז שווה-שוקיים, שתי השוקיים שוות זו לזו.}$$
+                <div style="text-align:right; direction:rtl;">בטרפז שווה-שוקיים, שתי השוקיים שוות זו לזו.</div>
                 $$c = d \\implies x = \\mathbf{${data.target}}$$
             `;
         }
@@ -831,8 +832,6 @@
             `;
         } else {
             feedbackElement.className = "feedback-badge wrong";
-            
-            // Build out detailed mathematical formula step execution blocks dynamically
             const proceduralMathBlock = buildStepByStepExplanation(data);
 
             feedbackElement.innerHTML = `
@@ -847,15 +846,16 @@
             `;
         }
 
-        // Trigger MathJax structural parse cycle to format formulas dynamically inside correction container
         if (window.MathJax) {
             MathJax.typesetPromise([feedbackElement]);
         }
     }
 
+    // FIXED: Clears internal logic parameters and forces full visual layout rebuild on call
     function regenerateQuizData() {
-        generateRandomExercises();
-        renderQuiz();
+        dataset = []; 
+        generateRandomExercises(); 
+        renderQuiz(); 
     }
 
     function setLanguage(lang) {
@@ -882,7 +882,7 @@
         renderQuiz();
     }
 
-    // Dynamic Initialization System running Hebrew first out-of-the-box
+    // Initialize with Hebrew out of the box
     generateRandomExercises();
     setLanguage('he');
 </script>
