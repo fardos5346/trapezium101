@@ -1,0 +1,891 @@
+<!DOCTYPE html>
+<html lang="he" dir="rtl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>מעבדת טרפזים ומשוואות אלגבריות</title>
+    <script src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
+    <style>
+        :root {
+            --primary: #0f172a;
+            --secondary: #2563eb;
+            --success: #16a34a;
+            --error: #dc2626;
+            --bg: #f8fafc;
+            --card-bg: #ffffff;
+            --text: #334155;
+            --accent: #ea580c;
+        }
+
+        body {
+            font-family: 'Segoe UI', system-ui, -apple-system, sans-serif;
+            background-color: var(--bg);
+            color: var(--text);
+            margin: 0;
+            padding: 20px;
+            line-height: 1.7;
+        }
+
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+        }
+
+        .lang-selector {
+            display: flex;
+            justify-content: flex-end;
+            gap: 12px;
+            margin-bottom: 25px;
+        }
+
+        button.lang-btn {
+            background-color: #e2e8f0;
+            border: 2px solid transparent;
+            padding: 10px 20px;
+            border-radius: 8px;
+            cursor: pointer;
+            font-weight: 600;
+            transition: all 0.2s;
+        }
+
+        button.lang-btn.active {
+            background-color: var(--primary);
+            color: white;
+            border-color: var(--secondary);
+        }
+
+        .card {
+            background: var(--card-bg);
+            padding: 35px;
+            border-radius: 16px;
+            box-shadow: 0 4px 20px -2px rgba(0,0,0,0.05);
+            margin-bottom: 30px;
+        }
+
+        h1, h2, h3 {
+            color: var(--primary);
+            margin-top: 0;
+        }
+
+        .rtl {
+            direction: rtl !important;
+            text-align: right !important;
+        }
+        
+        .rtl p, .rtl h1, .rtl h2, .rtl h3, .rtl span, .rtl li {
+            word-spacing: 0.05em;
+            line-height: 1.8;
+        }
+
+        .grid-layout {
+            display: grid;
+            grid-template-columns: 1.2fr 0.8fr;
+            gap: 40px;
+        }
+
+        @media (max-width: 900px) {
+            .grid-layout { grid-template-columns: 1fr; }
+        }
+
+        .quiz-controls {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 25px;
+            flex-wrap: wrap;
+            gap: 15px;
+        }
+
+        .regen-btn {
+            background-color: var(--accent);
+            color: white;
+            border: none;
+            padding: 12px 24px;
+            border-radius: 8px;
+            cursor: pointer;
+            font-weight: bold;
+            font-size: 1rem;
+            transition: background 0.2s;
+        }
+
+        .regen-btn:hover {
+            background-color: #c2410c;
+        }
+
+        .formula-box {
+            background-color: #f0fdf4;
+            border-left: 5px solid var(--success);
+            padding: 20px;
+            margin: 20px 0;
+            border-radius: 6px;
+        }
+
+        .rtl .formula-box {
+            border-left: none;
+            border-right: 5px solid var(--success);
+        }
+
+        .context-box {
+            background-color: #f8fafc;
+            border: 1px solid #e2e8f0;
+            border-radius: 12px;
+            padding: 20px;
+            margin-top: 20px;
+        }
+
+        .split-lab-box {
+            background-color: #f1f5f9;
+            border-radius: 12px;
+            padding: 20px;
+            margin: 20px 0;
+            border: 1px solid #cbd5e1;
+        }
+
+        .split-inputs {
+            display: flex;
+            gap: 15px;
+            margin-bottom: 15px;
+            flex-wrap: wrap;
+        }
+
+        .quiz-item {
+            border-bottom: 2px solid #f1f5f9;
+            padding: 35px 0;
+            display: grid;
+            grid-template-columns: 1.3fr 0.7fr;
+            gap: 40px;
+            align-items: center;
+        }
+
+        @media (max-width: 800px) {
+            .quiz-item { grid-template-columns: 1fr; }
+        }
+
+        .inputs-block {
+            display: flex;
+            flex-direction: column;
+            gap: 15px;
+        }
+
+        .profile-badge {
+            display: inline-block;
+            background-color: #e2e8f0;
+            padding: 4px 10px;
+            border-radius: 4px;
+            font-size: 0.85rem;
+            font-weight: bold;
+            margin-bottom: 10px;
+            color: var(--primary);
+        }
+
+        .input-group {
+            display: flex;
+            align-items: center;
+            gap: 15px;
+            flex-wrap: wrap;
+            margin-top: 10px;
+        }
+
+        .input-group label {
+            font-weight: 600;
+        }
+
+        input[type="number"] {
+            padding: 10px;
+            border: 2px solid #cbd5e1;
+            border-radius: 6px;
+            width: 130px;
+            font-size: 1rem;
+        }
+
+        .action-btn {
+            background-color: var(--secondary);
+            color: white;
+            border: none;
+            padding: 10px 20px;
+            border-radius: 6px;
+            cursor: pointer;
+            font-weight: 600;
+        }
+
+        .feedback-container {
+            margin-top: 12px;
+            min-height: 48px;
+        }
+
+        .feedback-badge {
+            font-weight: bold;
+            padding: 15px;
+            border-radius: 8px;
+            font-size: 1rem;
+            display: inline-flex;
+            flex-direction: column;
+            gap: 6px;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.05);
+            width: 100%;
+            box-sizing: border-box;
+        }
+
+        .feedback-badge.correct {
+            background-color: #dcfce7;
+            color: var(--success);
+            border: 1px solid #bbf7d0;
+        }
+
+        .feedback-badge.wrong {
+            background-color: #fee2e2;
+            color: var(--error);
+            border: 1px solid #fecaca;
+        }
+
+        .explanation-step-box {
+            background: rgba(255, 255, 255, 0.7);
+            border-radius: 6px;
+            padding: 12px;
+            margin-top: 6px;
+            color: #334155;
+            font-weight: normal;
+            font-size: 0.95rem;
+            border-right: 3px solid var(--error);
+        }
+        
+        .ltr .explanation-step-box {
+            border-right: none;
+            border-left: 3px solid var(--error);
+        }
+
+        .svg-container {
+            background: #f8fafc;
+            border: 2px dashed #e2e8f0;
+            border-radius: 12px;
+            padding: 15px;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+        }
+
+        .unit-aside-note {
+            font-size: 0.95rem;
+            color: #64748b;
+            font-weight: bold;
+            margin-top: 2px;
+        }
+    </style>
+</head>
+<body>
+
+<div class="container">
+    <div class="lang-selector">
+        <button class="lang-btn" id="btn-en" onclick="setLanguage('en')">English</button>
+        <button class="lang-btn" id="btn-ar" onclick="setLanguage('ar')">العربية</button>
+        <button class="lang-btn" id="btn-he" onclick="setLanguage('he')">עברית</button>
+        <button class="lang-btn" id="btn-ru" onclick="setLanguage('ru')">Русский</button>
+    </div>
+
+    <div class="card" id="theory-section"></div>
+
+    <div class="card">
+        <div class="quiz-controls" id="quiz-header-container">
+            <h2 id="quiz-heading" style="margin:0;">Computational Lab</h2>
+            <button class="regen-btn" id="regen-button-text" onclick="regenerateQuizData()">Regenerate New Values</button>
+        </div>
+        <div id="quiz-container"></div>
+    </div>
+</div>
+
+<script>
+    const translations = {
+        en: {
+            dir: 'ltr',
+            title: 'Trapezium Slicing & Linear Equations',
+            def: 'We can evaluate any trapezium by isolating its inner space into <b>1 center rectangle</b> and <b>2 right-angled triangles</b>. Note that in a right-angled trapezium, the height axis is distinct from the outer bounding perimeter values.',
+            sides: 'Adjust the values below to break down the trapezium metrics interactively:',
+            splitLabTitle: 'Interactive Breakdown Lab',
+            formula1Title: 'Method 1: Sectional Splitting',
+            formula2Title: 'Method 2: Standard Unified Area Formula',
+            quizTitle: 'Algebraic Target Matrix (20 Unique Scenarios)',
+            historyTitle: 'Historical Framework',
+            historyText: 'The word "trapezium" originates from the Greek word "trapeza", meaning table. Ancient Babylonian builders calculated these shapes over 3,000 years ago to divide agricultural fields fairly along the Nile River.',
+            useTitle: 'Where is it used today?',
+            useText: 'Trapeziums are structurally vital in modern engineering. Wing designs on high-performance supersonic jets use trapezoidal configurations because they offer superior aerodynamic stability.',
+            checkAns: 'Verify Value',
+            correctStatus: '✓ CORRECT ANSWER!',
+            correctFeedback: 'Great job! Your calculations match perfectly.',
+            wrongStatus: '✗ INCORRECT ANSWER',
+            wrongFeedback: 'Calculations do not match.',
+            expectedPhrase: 'Detailed Step-by-Step Geometric Explanation:',
+            placeholder: 'Value',
+            question: 'Question',
+            solveFor: 'Solve for',
+            isoscelesLabel: 'Isosceles Trapezium',
+            rightLabel: 'Right-Angled Trapezium',
+            regenText: '🔄 Generate New Exercises',
+            unitSystemText: 'System Scaling Measurement Unit:'
+        },
+        ar: {
+            dir: 'rtl',
+            title: 'تقسيم شبه المنحرف والمعادلات الخطية',
+            def: 'يمكننا حساب مساحة أي شبه منحرف عن طريق تقسيم مساحته الداخلية إلى <b>مستطيل مركزي واحد</b> و <b>مثلثين قائمي الزاوية</b>.',
+            sides: 'قم بتغيير القيم أدناه لتفكيك أبعاد شبه المنحرف بشكل تفاعلي:',
+            splitLabTitle: 'مختبر التفكيك التفاعلي',
+            formula1Title: 'الأسلوب 1: التقسيم المقطعي',
+            formula2Title: 'الأسلوب 2: صيغة المساحة الموحدة القياسية',
+            quizTitle: 'مصفوفة الأهداف الجبرية (20 نموذجاً فريداً)',
+            historyTitle: 'الإطار التاريخي',
+            historyText: 'تأتي كلمة "شبه منحرف" باللغة اليونانية من كلمة "ترابيزا" وتعني طاولة. قام البناؤون البابليون القدامى بحساب هذه الأشكال منذ أكثر من 3000 عام.',
+            useTitle: 'أين يتم استخدامه اليوم؟',
+            useText: 'يعتبر شبه المنحرف حيوياً في الهندسة الحديثة. تستخدم أجنحة الطائرات النفاثة المقاتلة تصميماً شبه منحرف لضمان الاستقرار.',
+            checkAns: 'التحقق من الإجابة',
+            correctStatus: '✓ إجابة صحيحة!',
+            correctFeedback: 'عمل رائع! حساباتك متطابقة تماماً.',
+            wrongStatus: '✗ إجابة غير صحيحة',
+            wrongFeedback: 'الحسابات غير متطابقة.',
+            expectedPhrase: 'الشرح الهندسي المفصل خطوة بخطوة:',
+            placeholder: 'القيمة',
+            question: 'السؤال',
+            solveFor: 'أوجِد قيمة',
+            isoscelesLabel: 'شبه منحرف متساوي الساقين',
+            rightLabel: 'شبه منحرف قائم الزاوية',
+            regenText: '🔄 توليد تمارين جديدة',
+            unitSystemText: 'وحدة القياس المعتمدة للمسافات والمحيط:'
+        },
+        he: {
+            dir: 'rtl',
+            title: 'פירוק טרפזים ומשוואות אלגבריות',
+            def: 'ניתן לחשב שטח של כל טרפז על ידי פירוק החלל הפנימי שלו ל-<b>מלבן מרכזי אחד</b> ו-<b>שני משולשים ישרי-זווית</b>.',
+            sides: 'שנו את הערכים מטה כדי לראות את פירוק המידות בצורה דינמית:',
+            splitLabTitle: 'מעבדת פירוק דינמית',
+            formula1Title: 'שיטה 1: פירוק לצורות פשוטות',
+            formula2Title: 'שיטה 2: נוסחת השטח המאוחדת',
+            quizTitle: 'מטריצת אתגר אלגברי (20 תרחישים ייחודיים)',
+            historyTitle: 'רקע היסטורי',
+            historyText: 'מקור המילה "טרפז" מגיע מהמילה היוונית "טראפזה", שמשמעותה שולחן. בנאים בבבל העתיקה ומודדי קרקעות במצרים חישבו שטחים אלו לפני למעله מ-3,000 שנה.',
+            useTitle: 'איפה משתמשים בזה היום?',
+            useText: 'טרפזים חיוניים מבחינה מבנית בהנדסה מודרנית. תכנון כנפיים במטוסי סילון על-קוליים משתמש בצורת טרפז מכיוון שהיא מעניקה יציבות אווירודינמית מעולה.',
+            checkAns: 'בדיקת תשובה',
+            correctStatus: '✓ תשובה נכונה!',
+            correctFeedback: 'עבודה מצוינת! החישובים שלך מדויקים לחלוטין.',
+            wrongStatus: '✗ תשובה שגויה',
+            wrongFeedback: 'החישוב שהוזן אינו תואם לערך הנדרש.',
+            expectedPhrase: 'הסבר גאומטרי מפורט שלב-אחר-שלב:',
+            placeholder: 'מספר',
+            question: 'שאלה',
+            solveFor: 'מצא את',
+            isoscelesLabel: 'טרפז שווה-שוקיים',
+            rightLabel: 'טרפז ישר-זווית',
+            regenText: '🔄 הגרל תרגילים חדשים',
+            unitSystemText: 'יחידת המידה של צלעות התרשים:'
+        },
+        ru: {
+            dir: 'ltr',
+            title: 'Разбиение трапеции и алгебраические уравнения',
+            def: 'Мы можем вычислить площадь любой трапеции, разделив её внутреннее пространство на <b>1 центральный прямоугольник</b> и <b>2 прямоугольных треугольника</b>.',
+            sides: 'Измените значения ниже, чтобы интерактивно разобрать параметры трапеции:',
+            splitLabTitle: 'Интерактивная лаборатория разбиения',
+            formula1Title: 'Метод 1: Поэтапное разделение',
+            formula2Title: 'Метод 2: Стандартная единая формула площади',
+            quizTitle: 'Матрица алгебраических задач (20 уникальных сценариев)',
+            historyTitle: 'Историческая справка',
+            historyText: 'Слово "трапеция" происходит от греческого слова "trapeza", что означает стол. Древние вавилонские строители вычисляли эти формы более 3000 лет назад.',
+            useTitle: 'Где это применяется сегодня?',
+            useText: 'Форма трапеции критически важна в современном машиностроении. Конструкции крыльев сверхзвуковых истребителей используют трапециевидную форму.',
+            checkAns: 'Проверить ответ',
+            correctStatus: '✓ ПРАВИЛЬНЫЙ ОТВЕТ!',
+            correctFeedback: 'Отличная работа! Ваши расчеты абсолютно верны.',
+            wrongStatus: '✗ НЕПРАВИЛЬНЫЙ ОТВЕТ',
+            wrongFeedback: 'Введенное значение не совпадает с расчетным.',
+            expectedPhrase: 'Подробное пошаговое геометрическое объяснение:',
+            placeholder: 'Число',
+            question: 'Задача',
+            solveFor: 'Найдите значение',
+            isoscelesLabel: 'Равнобедренная трапеция',
+            rightLabel: 'Прямоугольная трапеция',
+            regenText: '🔄 Сгенерировать новые задачи',
+            unitSystemText: 'Единица измерения длин на рисунке:'
+        }
+    };
+
+    let dataset = [];
+    let currentLang = 'he'; 
+
+    function getHebrewUnit(u) {
+        if (u === 'cm²') return 'סמ״ר';
+        if (u === 'm²') return 'מ״ר';
+        if (u === 'cm') return 'ס״מ';
+        if (u === 'm') return 'מ׳';
+        return u;
+    }
+
+    function generateRandomExercises() {
+        const baseTemplates = [
+            {id: 1, type: 'Isosceles', labelX: 'Area', unit: 'cm', outUnit: 'cm²'},
+            {id: 2, type: 'Right-Angled', labelX: 'Perimeter', unit: 'm', outUnit: 'm'},
+            {id: 3, type: 'Isosceles', labelX: 'x', unit: 'cm', outUnit: 'cm', isInverseA: true},
+            {id: 4, type: 'Right-Angled', labelX: 'x', unit: 'm', outUnit: 'm', isInverseB: true},
+            {id: 5, type: 'Isosceles', labelX: 'x', unit: 'cm', outUnit: 'cm', isInverseH: true},
+            {id: 6, type: 'Right-Angled', labelX: 'Area', unit: 'm', outUnit: 'm²'},
+            {id: 7, type: 'Isosceles', labelX: 'x', unit: 'cm', outUnit: 'cm', isInverseC: true},
+            {id: 8, type: 'Isosceles', labelX: 'Area', unit: 'm', outUnit: 'm²'},
+            {id: 9, type: 'Right-Angled', labelX: 'Perimeter', unit: 'cm', outUnit: 'cm'},
+            {id: 10, type: 'Isosceles', labelX: 'x', unit: 'm', outUnit: 'm', isInverseA: true},
+            {id: 11, type: 'Isosceles', labelX: 'Perimeter', unit: 'cm', outUnit: 'cm'},
+            {id: 12, type: 'Right-Angled', labelX: 'Area', unit: 'm', outUnit: 'm²'},
+            {id: 13, type: 'Isosceles', labelX: 'Perimeter', unit: 'cm', outUnit: 'cm'},
+            {id: 14, type: 'Isosceles', labelX: 'Area', unit: 'm', outUnit: 'm²'},
+            {id: 15, type: 'Right-Angled', labelX: 'Perimeter', unit: 'cm', outUnit: 'cm'},
+            {id: 16, type: 'Isosceles', labelX: 'x', unit: 'm', outUnit: 'm', isInverseH: true},
+            {id: 17, type: 'Isosceles', labelX: 'Perimeter', unit: 'cm', outUnit: 'cm'},
+            {id: 18, type: 'Right-Angled', labelX: 'Area', unit: 'm', outUnit: 'm²'},
+            {id: 19, type: 'Isosceles', labelX: 'Area', unit: 'cm', outUnit: 'cm²'},
+            {id: 20, type: 'Isosceles', labelX: 'x', unit: 'm', outUnit: 'm', isInverseB: true}
+        ];
+
+        dataset = baseTemplates.map(template => {
+            const randFactor = Math.floor(Math.random() * 3) + 2; 
+            let a = 4 * randFactor;
+            let b = 10 * randFactor;
+            let h = 4 * randFactor;
+            let c = 5 * randFactor;
+            let d = 5 * randFactor;
+            let target = 0;
+
+            if (template.type === 'Right-Angled') {
+                a = 6 * randFactor;
+                b = 10 * randFactor;
+                h = 3 * randFactor;
+                c = 3 * randFactor; 
+                d = 5 * randFactor;
+            }
+
+            let promptEn = '', promptAr = '', promptHe = '', promptRu = '';
+
+            if (template.labelX === 'Area') {
+                target = ((a + b) * h) / 2;
+                promptEn = `Calculate the complete internal area enclosed by the trapezium structure.`;
+                promptAr = `احسب المساحة الداخلية الكلية المحصورة داخل هيكل شبه المنحرف.`;
+                promptHe = `חשב את השטח הפנימי המלא הכלוא בתוך מבנה הטרפז.`;
+                promptRu = `Вычислите полную внутреннюю площадь, ограниченную структурой трапеции.`;
+            } else if (template.labelX === 'Perimeter') {
+                target = a + b + c + d;
+                promptEn = `Find the sum total perimeter bounded by the outer boundaries of the shape.`;
+                promptAr = `أوجد المجموع الكلي لمحيط الشكل المحاط بالحدود الخارجية.`;
+                promptHe = `מצא את סכום ההיקף הכולל החסום על ידי הגבולות החיצוניים של הצורה.`;
+                promptRu = `Найдите суммарный периметр, ограниченный внешними границами фигуры.`;
+            } else if (template.isInverseA) {
+                target = a;
+                const calculatedArea = ((a + b) * h) / 2;
+                promptEn = `If total area equals ${calculatedArea}, extract the length of top base edge [a].`;
+                promptAr = `إذا المساحة الكلية تساوي ${calculatedArea}، استخرج الطول للحافة العليا [a].`;
+                promptHe = `אם השטח הכולל שווה ל-${calculatedArea}, מצא את האורך של הבסיס העליון [a].`;
+                promptRu = `Если общая площадь равна ${calculatedArea}, вычислите длину верхнего основания [a].`;
+            } else if (template.isInverseB) {
+                target = b;
+                const calculatedArea = ((a + b) * h) / 2;
+                promptEn = `If internal area is calculated at ${calculatedArea}, isolate the dimension of bottom base edge [b].`;
+                promptAr = `إذا تم حساب المساحة الداخلية بقيمة ${calculatedArea}، عزل البعد للحافة السفلى [b].`;
+                promptHe = `אם השטח הפנימי מחושב כ-${calculatedArea}, מצא את המימד של הבסיס התחתון [b].`;
+                promptRu = `Если внутренняя площадь равна ${calculatedArea}, определите размер нижнего основания [b].`;
+            } else if (template.isInverseH) {
+                target = h;
+                const calculatedArea = ((a + b) * h) / 2;
+                promptEn = `Given that total calculated area is ${calculatedArea}, evaluate the precise vertical axis height line [h].`;
+                promptAr = `بما أن المساحة المحسوبة الإجمالية هي ${calculatedArea}، احسب الارتفاع العمودي الدقيق [h].`;
+                promptHe = `בהינתן שהשטח המחושב הכולל הוא ${calculatedArea}, מצא את הגובה האנכי המדויק [h].`;
+                promptRu = `Учитывая, что общая расчетная площадь равна ${calculatedArea}, найдите точную высоту вертикальной оси [h].`;
+            } else if (template.isInverseC) {
+                target = c;
+                promptEn = `Knowing that this shape belongs to an Isosceles profile, track down side length parameter [c].`;
+                promptAr = `بمعرفة أن هذا الشكل ينتمي إلى نمط متساوي الساقين، تتبع طول الضلع الجانبي [c].`;
+                promptHe = `ביודענו כי צורה זו שייכת לפרופיל שווה-שוקיים, מצא את פרמטר אורך השוק [c].`;
+                promptRu = `Зная, что эта фигура является равнобедренной, вычислите параметр длины боковой стороны [c].`;
+            }
+
+            return {
+                id: template.id,
+                type: template.type,
+                a, b, c, d, h,
+                labelX: template.labelX,
+                unit: template.unit,
+                outUnit: template.outUnit,
+                promptEn, promptAr, promptHe, promptRu,
+                target,
+                isInverseA: template.isInverseA,
+                isInverseB: template.isInverseB,
+                isInverseH: template.isInverseH,
+                isInverseC: template.isInverseC
+            };
+        });
+    }
+
+    function generateSVG(a, b, c, d, h, type, activeLabel = '') {
+        const isRight = type.includes('Right');
+        
+        const displayA = activeLabel === 'x' && a === 'x' ? 'x' : a;
+        const displayB = activeLabel === 'x' && b === 'x' ? 'x' : b;
+        const displayC = activeLabel === 'x' && c === 'x' ? 'x' : c;
+        const displayD = d;
+        const displayH = activeLabel === 'x' && h === 'x' ? 'x' : h;
+
+        const numA = typeof a === 'string' || activeLabel === 'a' ? 12 : Number(a);
+        const numB = typeof b === 'string' || activeLabel === 'b' ? 24 : Number(b);
+        const numH = typeof h === 'string' || activeLabel === 'h' ? 10 : Number(h);
+
+        const scale = 150 / Math.max(numA, numB, numH, 1);
+        const padX = 90;
+        const padY = 35;
+        
+        let x1, x2, x3, x4;
+        const yTop = padY;
+        const yBottom = padY + numH * scale;
+
+        if (isRight) {
+            x1 = padX;
+            x2 = x1 + numA * scale;
+            x3 = padX + numB * scale;
+            x4 = padX;
+        } else {
+            x1 = padX + (numB * scale - numA * scale) / 2;
+            x2 = x1 + numA * scale;
+            x3 = padX + numB * scale;
+            x4 = padX;
+        }
+
+        const colorA = activeLabel === 'Area' ? '#0f172a' : (activeLabel === 'a' || a === 'x' ? '#ea580c' : '#0f172a');
+        const colorB = activeLabel === 'Area' ? '#0f172a' : (activeLabel === 'b' || b === 'x' ? '#ea580c' : '#0f172a');
+        const colorC = activeLabel === 'Area' ? '#475569' : (activeLabel === 'c' || c === 'x' ? '#ea580c' : '#475569');
+        const colorH = activeLabel === 'Area' ? '#dc2626' : (activeLabel === 'h' || h === 'x' ? '#ea580c' : '#dc2626');
+
+        let innerContent = '';
+
+        if (isRight) {
+            const internalHLineX = x1 + 45; 
+            innerContent = `
+                <polygon points="${x1},${yTop} ${x2},${yTop} ${x3},${yBottom} ${x4},${yBottom}" fill="#f0fdf4" stroke="#16a34a" stroke-width="2.5" />
+                <line x1="${internalHLineX}" y1="${yTop}" x2="${internalHLineX}" y2="${yBottom}" stroke="${colorH}" stroke-width="1.5" stroke-dasharray="4,4" />
+                <path d="M ${internalHLineX} ${yBottom - 10} L ${internalHLineX + 10} ${yBottom - 10} L ${internalHLineX + 10} ${yBottom}" fill="none" stroke="#dc2626" stroke-width="1"/>
+                
+                <text x="${(x1+x2)/2}" y="${yTop - 12}" font-size="14" font-weight="bold" fill="${colorA}" text-anchor="middle">a = ${displayA}</text>
+                <text x="${(x3+x4)/2}" y="${yBottom + 22}" font-size="14" font-weight="bold" fill="${colorB}" text-anchor="middle">b = ${displayB}</text>
+                <text x="${x3 + 18}" y="${(yTop+yBottom)/2}" font-size="14" font-weight="bold" fill="#475569" text-anchor="start">d = ${displayD}</text>
+                <text x="${x4 - 15}" y="${(yTop+yBottom)/2 + 4}" font-size="14" font-weight="bold" fill="${colorC}" text-anchor="end">c = ${displayC}</text>
+                
+                <g>
+                    <rect x="${internalHLineX + 6}" y="${(yTop+yBottom)/2 - 11}" width="42" height="22" fill="#ffffff" stroke="#dc2626" stroke-width="1" rx="4"/>
+                    <text x="${internalHLineX + 27}" y="${(yTop+yBottom)/2 + 5}" font-size="13" fill="${colorH}" font-weight="bold" text-anchor="middle">h = ${displayH}</text>
+                </g>
+                <path d="M ${x4} ${yBottom - 15} L ${x4 + 15} ${yBottom - 15} L ${x4 + 15} ${yBottom}" fill="none" stroke="#16a34a" stroke-width="1.5"/>
+            `;
+        } else {
+            const hLineX = x1 + (x2 - x1) * 0.5; 
+            innerContent = `
+                <polygon points="${x1},${yTop} ${x2},${yTop} ${x3},${yBottom} ${x4},${yBottom}" fill="#f0fdf4" stroke="#16a34a" stroke-width="2.5" />
+                <line x1="${hLineX}" y1="${yTop}" x2="${hLineX}" y2="${yBottom}" stroke="${colorH}" stroke-width="2" stroke-dasharray="4,4" />
+                
+                <text x="${(x1+x2)/2}" y="${yTop - 12}" font-size="14" font-weight="bold" fill="${colorA}" text-anchor="middle">a = ${displayA}</text>
+                <text x="${(x3+x4)/2}" y="${yBottom + 22}" font-size="14" font-weight="bold" fill="${colorB}" text-anchor="middle">b = ${displayB}</text>
+                <text x="${x4 - 18}" y="${(yTop+yBottom)/2}" font-size="14" font-weight="bold" fill="${colorC}" text-anchor="end">c = ${displayC}</text>
+                <text x="${x3 + 18}" y="${(yTop+yBottom)/2}" font-size="14" font-weight="bold" fill="#475569" text-anchor="start">d = ${displayD}</text>
+                
+                <g>
+                    <rect x="${hLineX - 25}" y="${(yTop+yBottom)/2 - 11}" width="50" height="22" fill="#ffffff" stroke="#dc2626" stroke-width="1" rx="4"/>
+                    <text x="${hLineX}" y="${(yTop+yBottom)/2 + 5}" font-size="13" fill="${colorH}" font-weight="bold" text-anchor="middle">h = ${displayH}</text>
+                </g>
+            `;
+        }
+
+        return `<svg width="100%" height="200" viewBox="0 0 360 220" xmlns="http://www.w3.org/2000/svg">${innerContent}</svg>`;
+    }
+
+    function updateLiveSplitCalculations() {
+        const a = parseInt(document.getElementById('split-a').value) || 0;
+        const b = parseInt(document.getElementById('split-b').value) || 0;
+        const h = parseInt(document.getElementById('split-h').value) || 0;
+
+        if (b < a) {
+            document.getElementById('split-math-output').innerHTML = 'Base b must be larger than Base a.';
+            return;
+        }
+
+        const rectArea = a * h;
+        const trianglesArea = ((b - a) * h) / 2;
+        const totalArea = rectArea + trianglesArea;
+
+        const container = document.getElementById('interactive-svg-placement');
+        container.innerHTML = generateSVG(a, b, h, h, h, 'Isosceles', '');
+
+        if (currentLang === 'he') {
+            document.getElementById('split-math-output').innerHTML = `
+                <ul>
+                    <li><b>שטח המלבן המרכזי:</b> $$a \\times h = ${a} \\times ${h} = ${rectArea} \\text{ סמ״ר}$$</li>
+                    <li><b>שטח המשולשים יחד:</b> $$\\frac{(${b - a} \\times ${h})}{2} = ${trianglesArea} \\text{ סמ״ר}$$</li>
+                    <li><b>שטח הטרפז הכולל:</b> $$${rectArea} + ${trianglesArea} = ${totalArea} \\text{ סמ״ר}$$</li>
+                </ul>
+            `;
+        } else if (currentLang === 'ar') {
+            document.getElementById('split-math-output').innerHTML = `
+                <ul>
+                    <li><b>مساحة المستطيل:</b> $$a \\times h = ${a} \\times ${h} = ${rectArea} \\text{ سم}^2$$</li>
+                    <li><b>مساحة المثلثات:</b> $$\\frac{(${b - a} \\times ${h})}{2} = ${trianglesArea} \\text{ سم}^2$$</li>
+                    <li><b>المساحة الكلية:</b> $$${rectArea} + ${trianglesArea} = ${totalArea} \\text{ سم}^2$$</li>
+                </ul>
+            `;
+        } else if (currentLang === 'ru') {
+            document.getElementById('split-math-output').innerHTML = `
+                <ul>
+                    <li><b>Площадь прямоугольника:</b> $$a \\times h = ${a} \\times ${h} = ${rectArea} \\text{ см}^2$$</li>
+                    <li><b>Площадь треугольников:</b> $$\\frac{(${b - a} \\times ${h})}{2} = ${trianglesArea} \\text{ см}^2$$</li>
+                    <li><b>Общая площадь:</b> $$${rectArea} + ${trianglesArea} = ${totalArea} \\text{ см}^2$$</li>
+                </ul>
+            `;
+        } else {
+            document.getElementById('split-math-output').innerHTML = `
+                <ul>
+                    <li><b>Center Rectangle Area:</b> $$a \\times h = ${a} \\times ${h} = ${rectArea} \\text{ cm}^2$$</li>
+                    <li><b>Combined Triangles Area:</b> $$\\frac{(${b - a} \\times ${h})}{2} = ${trianglesArea} \\text{ cm}^2$$</li>
+                    <li><b>Total Combined Area:</b> $$${rectArea} + ${trianglesArea} = ${totalArea} \\text{ cm}^2$$</li>
+                </ul>
+            `;
+        }
+
+        if (window.MathJax) {
+            MathJax.typesetPromise();
+        }
+    }
+
+    function renderTheory() {
+        const t = translations[currentLang];
+        const container = document.getElementById('theory-section');
+        
+        container.className = `card ${t.dir === 'rtl' ? 'rtl' : ''}`;
+        container.innerHTML = `
+            <div class="grid-layout">
+                <div>
+                    <h1>${t.title}</h1>
+                    <p>${t.def}</p>
+                    
+                    <div class="formula-box">
+                        <h3>${t.formula1Title}</h3>
+                        $$\\text{Area} = (\\text{Rectangle}) + (\\text{Triangles})$$
+                    </div>
+
+                    <div class="formula-box">
+                        <h3>${t.formula2Title}</h3>
+                        $$\\text{Area} = \\frac{(a + b) \\times h}{2}$$
+                    </div>
+
+                    <div class="split-lab-box">
+                        <h3>${t.splitLabTitle}</h3>
+                        <p>${t.sides}</p>
+                        <div class="split-inputs">
+                            <div><label>a: </label><input type="number" id="split-a" value="6" oninput="updateLiveSplitCalculations()"></div>
+                            <div><label>b: </label><input type="number" id="split-b" value="14" oninput="updateLiveSplitCalculations()"></div>
+                            <div><label>h: </label><input type="number" id="split-h" value="4" oninput="updateLiveSplitCalculations()"></div>
+                        </div>
+                        <div class="unit-aside-note">${t.unitSystemText} <b>cm / ס״מ</b></div>
+                        <div id="split-math-output"></div>
+                    </div>
+                </div>
+                
+                <div>
+                    <div id="interactive-svg-placement" class="svg-container"></div>
+                    
+                    <div class="context-box">
+                        <h3>${t.historyTitle}</h3>
+                        <p>${t.historyText}</p>
+                    </div>
+
+                    <div class="context-box">
+                        <h3>${t.useTitle}</h3>
+                        <p>${t.useText}</p>
+                    </div>
+                </div>
+            </div>
+        `;
+        updateLiveSplitCalculations();
+    }
+
+    function renderQuiz() {
+        const t = translations[currentLang];
+        document.getElementById('quiz-heading').innerText = t.quizTitle;
+        document.getElementById('regen-button-text').innerText = t.regenText;
+        
+        const quizContainer = document.getElementById('quiz-container');
+        quizContainer.innerHTML = '';
+
+        dataset.forEach((data) => {
+            const div = document.createElement('div');
+            div.className = `quiz-item ${t.dir === 'rtl' ? 'rtl' : ''}`;
+            
+            let displayPrompt = data.promptEn;
+            if (currentLang === 'he') displayPrompt = data.promptHe;
+            if (currentLang === 'ar') displayPrompt = data.promptAr;
+            if (currentLang === 'ru') displayPrompt = data.promptRu;
+
+            const badgeText = data.type === 'Isosceles' ? t.isoscelesLabel : t.rightLabel;
+            const textUnitAside = currentLang === 'he' ? getHebrewUnit(data.unit) : data.unit;
+            const displayOutUnit = currentLang === 'he' ? getHebrewUnit(data.outUnit) : data.outUnit;
+
+            const mathTargetSymbol = data.labelX === 'x' ? '$$x$$' : `$$\\text{${data.labelX}}$$`;
+
+            // Detect what token label is modified as 'x' to highlight the visual view correctly
+            let activeUrlLabel = data.labelX;
+            if(data.isInverseA) activeUrlLabel = 'a';
+            if(data.isInverseB) activeUrlLabel = 'b';
+            if(data.isInverseH) activeUrlLabel = 'h';
+            if(data.isInverseC) activeUrlLabel = 'c';
+
+            div.innerHTML = `
+                <div class="inputs-block">
+                    <div>
+                        <span class="profile-badge">${badgeText}</span>
+                    </div>
+                    <h3>${t.question} #${data.id}</h3>
+                    <p style="font-size: 1.1rem; color: var(--primary); font-weight: 500; margin-bottom: 6px;">${displayPrompt}</p>
+                    <div class="unit-aside-note" style="margin-bottom: 12px;">${t.unitSystemText} <b>${textUnitAside}</b></div>
+                    
+                    <div class="input-group">
+                        <label style="display:inline-flex; align-items:center; gap:6px;">
+                            <b>${t.solveFor} ${mathTargetSymbol} (${displayOutUnit}):</b>
+                        </label>
+                        <input type="number" id="quiz-input-${data.id}" placeholder="${t.placeholder}">
+                        <button class="action-btn" onclick="checkAnswer(${data.id})">${t.checkAns}</button>
+                    </div>
+                    <div class="feedback-container">
+                        <div id="feedback-${data.id}" class="feedback-badge" style="display:none;"></div>
+                    </div>
+                </div>
+
+                <div class="svg-container">
+                    ${generateSVG(data.a, data.b, data.c, data.d, data.h, data.type, activeUrlLabel)}
+                </div>
+            `;
+            quizContainer.appendChild(div);
+        });
+
+        if (window.MathJax) {
+            MathJax.typesetPromise();
+        }
+    }
+
+    function buildStepByStepExplanation(data) {
+        let stepHtml = "";
+        
+        if (data.labelX === 'Area') {
+            stepHtml = `
+                $$\\text{Area} = \\frac{(a + b) \\cdot h}{2}$$
+                $$\\text{Area} = \\frac{(${data.a} + ${data.b}) \\cdot ${data.h}}{2} = \\frac{${data.a + data.b} \\cdot ${data.h}}{2} = \\mathbf{${data.target}}$$
+            `;
+        } else if (data.labelX === 'Perimeter') {
+            stepHtml = `
+                $$\\text{Perimeter} = a + b + c + d$$
+                $$\\text{Perimeter} = ${data.a} + ${data.b} + ${data.c} + ${data.d} = \\mathbf{${data.target}}$$
+            `;
+        } else if (data.isInverseA) {
+            const givenArea = ((data.target + data.b) * data.h) / 2;
+            stepHtml = `
+                $$\\text{Area} = \\frac{(x + b) \\cdot h}{2} \\implies ${givenArea} = \\frac{(x + ${data.b}) \\cdot ${data.h}}{2}$$
+                $$${givenArea} \\cdot 2 = (x + ${data.b}) \\cdot ${data.h} \\implies ${givenArea * 2} = (x + ${data.b}) \\cdot ${data.h}$$
+                $$\\frac{${givenArea * 2}}{${data.h}} = x + ${data.b} \\implies ${(givenArea * 2) / data.h} = x + ${data.b}$$
+                $$x = ${(givenArea * 2) / data.h} - ${data.b} = \\mathbf{${data.target}}$$
+            `;
+        } else if (data.isInverseB) {
+            const givenArea = ((data.a + data.target) * data.h) / 2;
+            stepHtml = `
+                $$\\text{Area} = \\frac{(a + x) \\cdot h}{2} \\implies ${givenArea} = \\frac{(${data.a} + x) \\cdot ${data.h}}{2}$$
+                $$${givenArea} \\cdot 2 = (${data.a} + x) \\cdot ${data.h} \\implies ${givenArea * 2} = (${data.a} + x) \\cdot ${data.h}$$
+                $$\\frac{${givenArea * 2}}{${data.h}} = ${data.a} + x \\implies ${(givenArea * 2) / data.h} = ${data.a} + x$$
+                $$x = ${(givenArea * 2) / data.h} - ${data.a} = \\mathbf{${data.target}}$$
+            `;
+        } else if (data.isInverseH) {
+            const givenArea = ((data.a + data.b) * data.target) / 2;
+            stepHtml = `
+                $$\\text{Area} = \\frac{(a + b) \\cdot x}{2} \\implies ${givenArea} = \\frac{(${data.a} + ${data.b}) \\cdot x}{2}$$
+                $$${givenArea} = \\frac{${data.a + data.b} \\cdot x}{2} \\implies ${givenArea} = ${ (data.a + data.b)/2 } \\cdot x$$
+                $$x = \\frac{${givenArea}}{${(data.a + data.b)/2}} = \\mathbf{${data.target}}$$
+            `;
+        } else if (data.isInverseC) {
+            stepHtml = `
+                $$\\text{בטרפז שווה-שוקיים, שתי השוקיים שוות זו לזו.}$$
+                $$c = d \\implies x = \\mathbf{${data.target}}$$
+            `;
+        }
+        return stepHtml;
+    }
+
+    function checkAnswer(id) {
+        const t = translations[currentLang];
+        const inputElement = document.getElementById(`quiz-input-${id}`);
+        const feedbackElement = document.getElementById(`feedback-${id}`);
+        const userValue = parseInt(inputElement.value, 10);
+        
+        const data = dataset.find(item => item.id === id);
+        const correctValue = data.target;
+
+        feedbackElement.style.display = "inline-flex";
+        
+        if (userValue === correctValue) {
+            feedbackElement.className = "feedback-badge correct";
+            feedbackElement.innerHTML = `
+                <span>${t.correctStatus}</span>
+                <span style="font-size:0.85rem; font-weight:normal; opacity:0.9;">${t.correctFeedback}</span>
+            `;
+        } else {
+            feedbackElement.className = "feedback-badge wrong";
+            
+            // Build out detailed mathematical formula step execution blocks dynamically
+            const proceduralMathBlock = buildStepByStepExplanation(data);
+
+            feedbackElement.innerHTML = `
+                <span>${t.wrongStatus}</span>
+                <span style="font-size:0.85rem; font-weight:normal; opacity:0.9; margin-bottom:4px;">${t.wrongFeedback}</span>
+                <span style="font-size:1rem; border-top:1px dashed rgba(220,38,38,0.3); padding-top:8px; font-weight:bold;">
+                    ${t.expectedPhrase}
+                </span>
+                <div class="explanation-step-box">
+                    ${proceduralMathBlock}
+                </div>
+            `;
+        }
+
+        // Trigger MathJax structural parse cycle to format formulas dynamically inside correction container
+        if (window.MathJax) {
+            MathJax.typesetPromise([feedbackElement]);
+        }
+    }
+
+    function regenerateQuizData() {
+        generateRandomExercises();
+        renderQuiz();
+    }
+
+    function setLanguage(lang) {
+        currentLang = lang;
+        
+        document.querySelectorAll('.lang-btn').forEach(btn => {
+            btn.classList.remove('active');
+        });
+        
+        document.getElementById(`btn-${lang}`).classList.add('active');
+        
+        const headerContainer = document.getElementById('quiz-header-container');
+        if (translations[lang].dir === 'rtl') {
+            headerContainer.className = "quiz-controls rtl";
+            document.body.className = "rtl";
+            document.body.dir = "rtl";
+        } else {
+            headerContainer.className = "quiz-controls";
+            document.body.className = "";
+            document.body.dir = "ltr";
+        }
+
+        renderTheory();
+        renderQuiz();
+    }
+
+    // Dynamic Initialization System running Hebrew first out-of-the-box
+    generateRandomExercises();
+    setLanguage('he');
+</script>
+
+</body>
+</html>
